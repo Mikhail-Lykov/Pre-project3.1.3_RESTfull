@@ -15,7 +15,7 @@
         <a th:if="${message}" STYLE="color: brown" th:text="${message}"></a>
         <table>
             <tr>
-                <td><label for="username">Username:</label></td>
+                <td><label for="username">E-mail:</label></td>
                 <td><input type="text" th:field="*{username}" id="username"></td>
             </tr>
             <tr>
@@ -23,8 +23,16 @@
                 <td><input type="text" th:field="*{password}" id="password"></td>
             </tr>
             <tr>
-                <td><label for="email">E-mail:</label></td>
-                <td><input type="text" th:field="*{email}" id="email"></td>
+                <td><label for="firstname">First name:</label></td>
+                <td><input type="text" th:field="*{firstName}" id="firstname"></td>
+            </tr>
+            <tr>
+                <td><label for="lastname">Last name:</label></td>
+                <td><input type="text" th:field="*{lastName}" id="lastname"></td>
+            </tr>
+            <tr>
+                <td><label for="age">Age:</label></td>
+                <td><input type="text" th:field="*{age}" id="age"></td>
             </tr>
         </table>
         <br/>

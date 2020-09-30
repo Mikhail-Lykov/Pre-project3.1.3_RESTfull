@@ -19,7 +19,7 @@ public class User implements UserDetails {
 
     @Column(name = "username")
     @NotBlank(message = "Username cannot be empty")
-    @Size(min = 3, max = 16, message = "Username must be between 3 and 16 characters")
+    @Email(message = "Email should be valid")
     private String username;
 
     @Column(name = "password")
@@ -27,10 +27,16 @@ public class User implements UserDetails {
     @Size(min = 3, max = 16, message = "Password must be between 3 and 16 characters")
     private String password;
 
-    @Column(name = "email")
-    @NotBlank(message = "E-mail cannot be empty")
-    @Email(message = "Email should be valid")
-    private String email;
+    @Column(name = "firstname")
+    @NotBlank(message = "First name cannot be empty")
+    private String firstName;
+
+    @Column(name = "lastname")
+    @NotBlank(message = "Last name cannot be empty")
+    private String lastName;
+
+    @Column(name = "age")
+    private Byte age;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
@@ -91,20 +97,36 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public Set<Role> getRoles() {
         return roles;
     }
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public Byte getAge() {
+        return age;
+    }
+
+    public void setAge(Byte age) {
+        this.age = age;
     }
 
     @Override
@@ -118,15 +140,5 @@ public class User implements UserDetails {
     @Override
     public int hashCode() {
         return Objects.hash(username);
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                '}';
     }
 }

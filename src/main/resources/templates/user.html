@@ -12,16 +12,28 @@
 <div>
     <table>
         <tr>
-            <td>Username:</td>
+            <td>ID:</td>
+            <td th:text="${user.id}"></td>
+        </tr>
+        <tr>
+            <td>First name:</td>
+            <td th:text="${user.firstName}"></td>
+        </tr>
+        <tr>
+            <td>Last name:</td>
+            <td th:text="${user.lastName}"></td>
+        </tr>
+        <tr>
+            <td>Age:</td>
+            <td th:text="${user.age}"></td>
+        </tr>
+        <tr>
+            <td>E-mail:</td>
             <td th:text="${user.username}"></td>
         </tr>
         <tr>
             <td>Password:</td>
             <td th:text="${user.password}"></td>
-        </tr>
-        <tr>
-            <td>E-mail:</td>
-            <td th:text="${user.email}"></td>
         </tr>
     </table>
 </div>

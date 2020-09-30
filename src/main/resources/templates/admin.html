@@ -12,12 +12,20 @@
 <div>
     <table border="1">
         <tr>
-            <th>UserName</th>
+            <th>ID</th>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>Age</th>
+            <th>E-mail</th>
             <th>Roles</th>
             <th>Edit</th>
             <th>Delete</th>
         </tr>
         <tr th:each="user : ${users}">
+            <td><a th:href="@{/user/{id}(id=${user.id})}" th:text="${user.id}"></a></td>
+            <td><a th:href="@{/user/{id}(id=${user.id})}" th:text="${user.firstName}"></a></td>
+            <td><a th:href="@{/user/{id}(id=${user.id})}" th:text="${user.lastName}"></a></td>
+            <td><a th:href="@{/user/{id}(id=${user.id})}" th:text="${user.age}"></a></td>
             <td><a th:href="@{/user/{id}(id=${user.id})}" th:text="${user.username}"></a></td>
             <td>
                 <a th:each="r : ${user.roles}" th:text="${r.getRole()} + '; '"></a>

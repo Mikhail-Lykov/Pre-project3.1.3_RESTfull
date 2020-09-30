@@ -28,7 +28,7 @@ public class AdminController {
     }
 
 
-    @PostMapping(value = "/admin")
+    @PostMapping(value = "/edit")
     public String editUser(@ModelAttribute("adminRole") String adminRole,
                            @ModelAttribute("user") @Valid User user, BindingResult result, ModelMap model){
 
@@ -45,7 +45,7 @@ public class AdminController {
         }
 
         if(!userService.edit(user, adminRole)){
-            model.addAttribute("message", "Username already exists");
+            model.addAttribute("message", "E-mail already exists");
             model.addAttribute("adminRole", b);
             return "edit";
         }

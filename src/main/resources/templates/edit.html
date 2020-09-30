@@ -10,21 +10,32 @@
     <a href="/logout">Exit</a>
 </div>
 <div>
-    <form th:method="POST" th:action="@{/admin}" th:object="${user}">
+    <form th:method="POST" th:action="@{/edit}" th:object="${user}">
         <a th:if="${message}" STYLE="color: brown" th:text="${message}"></a>
-        <input type="hidden" th:field="*{id}"  id="id">
         <table>
             <tr>
-                <td><label for="username">Username:</label></td>
+                <td><label for="id">ID:</label></td>
+                <td> <input type="text" th:field="*{id}"  id="id" readonly></td>
+            </tr>
+            <tr>
+                <td><label for="firstname">First name:</label></td>
+                <td> <input type="text" th:field="*{firstName}"  id="firstname"></td>
+            </tr>
+            <tr>
+                <td><label for="lastname">Last name:</label></td>
+                <td> <input type="text" th:field="*{lastName}"  id="lastname"></td>
+            </tr>
+            <tr>
+                <td><label for="age">Age:</label></td>
+                <td> <input type="text" th:field="*{age}"  id="age"></td>
+            </tr>
+            <tr>
+                <td><label for="username">E-mail:</label></td>
                 <td><input type="text" th:field="*{username}" id="username"></td>
             </tr>
             <tr>
                 <td><label for="password">Password:</label></td>
                 <td><input type="text" th:field="*{password}" id="password"></td>
-            </tr>
-            <tr>
-                <td><label for="email">E-mail:</label></td>
-                <td><input type="text" th:field="*{email}" id="email"></td>
             </tr>
         </table>
         <div th:if="${adminRole}">

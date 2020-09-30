@@ -36,7 +36,7 @@ public class RegistrationController {
         }
 
         if(!userService.save(user)){
-            model.addAttribute("message", "Username already exists");
+            model.addAttribute("message", "E-mail already exists");
             return "/new";
         }
 
