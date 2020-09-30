@@ -14,8 +14,8 @@
         <tr>
             <th>UserName</th>
             <th>Roles</th>
-            <th></th>
-            <th></th>
+            <th>Edit</th>
+            <th>Delete</th>
         </tr>
         <tr th:each="user : ${users}">
             <td><a th:href="@{/user/{id}(id=${user.id})}" th:text="${user.username}"></a></td>
