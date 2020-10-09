@@ -1,21 +1,16 @@
 package com.example.spring_boot.controller;
 
-import com.example.spring_boot.model.Role;
 import com.example.spring_boot.model.User;
 import com.example.spring_boot.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Controller
 public class AdminController {
@@ -29,62 +24,60 @@ public class AdminController {
 
 
     @PostMapping(value = "/edit")
-    public String editUser(@ModelAttribute("adminRole") String adminRole,
-                           @ModelAttribute("user") @Valid User user, BindingResult result, ModelMap model){
+    public String editUser(@ModelAttribute("roleListEdit") String roleList,
+                           @ModelAttribute("user") @Valid User user){
 
-        Boolean b = false;
-        if(adminRole.equals("1")){
-            b = true;
-        }
-
-        if(result.hasErrors()){
-            String message = result.getFieldError().getDefaultMessage();
-            model.addAttribute("message", message);
-            model.addAttribute("adminRole", b);
-            return "edit";
-        }
-
-        if(!userService.edit(user, adminRole)){
-            model.addAttribute("message", "E-mail already exists");
-            model.addAttribute("adminRole", b);
-            return "edit";
-        }
-
+        userService.edit(user, roleList);
         return "redirect:/admin";
     }
+
+    @PostMapping(value = "/add")
+    public String addUser(@ModelAttribute("roleListAdd") String roleList,
+                          @ModelAttribute("user") @Valid User user){
+        userService.save(user, roleList);
+        return "redirect:/admin";
+    }
+
 
 
     @GetMapping(value = "/admin")
-    public String showAllUsers(ModelMap model){
+    public String showAllUsers(@AuthenticationPrincipal User auth, @ModelAttribute("user") User user, ModelMap model){
         List<User> users = userService.findAll();
         model.addAttribute("users", users);
+        model.addAttribute("auth", auth);
         return "admin";
     }
 
+    @GetMapping(value = "/user")
+    public String userInfo(@AuthenticationPrincipal User auth, ModelMap model){
+        model.addAttribute("auth", auth);
+        return "user";
+    }
 
-    @GetMapping(value = "/admin/edit{id}")
-    public String showUser(@PathVariable("id") long id, ModelMap model){
-        User user = userService.findUserById(id);
+    @GetMapping(value = "/findOne")
+    @ResponseBody
+    public User findOne(Long id){
+        return userService.findUserById(id);
+    }
 
-        Set<String> set = new HashSet<>();
-        for(Role u : user.getRoles()){
-            set.add(u.getRole());
-        }
+    @PostMapping(value = "/delete")
+    public String deleteUser(@ModelAttribute("user") User user){
+        userService.delete(user.getId());
+        return "redirect:/admin";
+    }
 
-        Boolean b = false;
-        if(set.contains("ROLE_ADMIN")){
-            b = true;
-        }
-
-        model.addAttribute("user", user);
-        model.addAttribute("adminRole", b);
-        return "edit";
+    @GetMapping(value = "/login")
+    public String loginPage() {
+        return "login";
     }
 
 
-    @PostMapping(value = "/admin/{id}")
-    public String deleteUser(@PathVariable("id") long id){
-        userService.delete(id);
-        return "redirect:/admin";
+    @PostMapping(value = "/relevationUsername")
+    @ResponseBody
+    public Boolean relevationUsername(@ModelAttribute("newuser") String newuser, @ModelAttribute("olduser") String olduser){
+        if(userService.findUserByUsername(newuser) == null || newuser.equals(olduser)){
+            return false;
+        }
+        return true;
     }
 }
