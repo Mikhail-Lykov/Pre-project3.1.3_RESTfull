@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -32,51 +29,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean save(User user, String roleListEdit) {
+    public boolean save(User user) {
 
         if(userDao.getUserByName(user.getUsername()) != null){
             return false;
+        }else{
+            userDao.save(user);
+            return true;
         }
 
-        Set<Role> roles = new HashSet<>();
-        List<String> list = Arrays.asList(roleListEdit.split(","));
-        if(list.contains("2")){
-            roles.add(roleDao.getOne(2L));
-        }
-        if(list.contains("1") || list.contains("")){
-            roles.add(roleDao.getOne(1L));
-        }
-
-        user.setRoles(roles);
-        userDao.save(user);
-        return true;
     }
 
     @Override
-    public boolean edit(User user, String roleListEdit) {
+    public boolean edit(User user) {
 
         if(userDao.getUserByName(user.getUsername()) == null ||
                 userDao.getOne(user.getId()).getUsername().equals(user.getUsername())){
-
-            user.setRoles(userDao.getOne(user.getId()).getRoles());
-
-            List<String> list = Arrays.asList(roleListEdit.split(","));
-            for (String a : list) {
-                System.out.println("el: " + a);
-            }
-            if(list.contains("2")){
-                user.getRoles().add(roleDao.getOne(2L));
-            }
-            else{
-                user.getRoles().remove(roleDao.getOne(2L));
-            }
-
-            if(list.contains("1") || list.contains("")){
-                user.getRoles().add(roleDao.getOne(1L));
-            }
-            else{
-                user.getRoles().remove(roleDao.getOne(1L));
-            }
             userDao.save(user);
             return true;
         }
@@ -85,8 +53,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(Long id) {
-        userDao.deleteById(id);
+    public boolean delete(Long id) {
+        try{
+            userDao.deleteById(id);
+            return true;
+        } catch(Exception e){
+            System.err.println(e);
+            return false;
+        }
+
     }
 
     @Override

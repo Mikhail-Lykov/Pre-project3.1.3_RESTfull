@@ -69,7 +69,7 @@
 
                                 <h4 class="h4 py-3 pl-4">All users</h4>
                                 <div class="bg-white px-3 py-3">
-                                <table CLASS="table table-striped">
+                                <table CLASS="table table-striped" id="userTable">
                                     <thead class="thead-white">
                                     <tr>
                                         <th>ID</th>
@@ -82,25 +82,10 @@
                                         <th>Delete</th>
                                     </tr>
                                     </thead>
-                                    <tr id="123" th:each="user : ${users}">
-                                        <td><a th:text="${user.id}"></a></td>
-                                        <td><a th:text="${user.firstName}"></a></td>
-                                        <td><a th:text="${user.lastName}"></a></td>
-                                        <td><a th:text="${user.age}"></a></td>
-                                        <td><a th:text="${user.username}"></a></td>
-                                        <td>
-                                            <a th:each="r : ${user.roles}" th:text="${r} + ' '"></a>
-                                        </td>
-                                        <td>
-                                            <!-- Button edit modal -->
-                                            <a th:href="@{/findOne/(id=${user.id})}" class="btn btn-info eBtn text-white" id="btnEdit">Edit</a>
-                                        </td>
-                                        <td>
-                                            <!-- Button delete modal -->
-                                            <a th:href="@{/findOne/(id=${user.id})}" class="btn btn-danger dBtn text-white" id="btnDelete">Delete</a>
+                                    <tbody id="userTableBody">
 
-                                        </td>
-                                    </tr>
+                                    </tbody>
+
                                 </table>
                                 </div>
 
@@ -111,55 +96,44 @@
                                 <h4 class="h4 py-3 pl-4">Add new user</h4>
                                 <div class="bg-white px-3 py-3">
 
-                                    <form class="d-flex justify-content-center needs-validation" name="formNewUser" novalidate th:method="POST" th:action="@{/add}" th:object="${user}">
-                                        <input name="newReleEmail" type="hidden">
+                                    <form class="d-flex justify-content-center" name="formNewUser" id="formNewUser" action="/admin" onchange="validateForm('#formNewUser')">
+                                        <input name="releEmail" type="hidden">
                                         <div class="d-flex flex-column">
                                             <div class="form-group">
                                                 <label class="d-flex justify-content-center" for="firstname"><strong>First name<a class="text-danger">*</a></strong></label>
-                                                <input class="form-control" type="text" th:field="*{firstName}" id="firstname" placeholder="first name" required>
-                                                <div class="invalid-feedback">
-                                                    Please entered your first name.
-                                                </div>
+                                                <input class="form-control" type="text" id="firstname" name="firstname" placeholder="first name" required>
+                                                <span class="text-danger" style="font-size: 80%" id="firstnameSpan" name="firstnameSpan"></span>
                                             </div>
                                             <div class="form-group">
                                                 <label class="d-flex justify-content-center" for="lastname"><strong>Last name<a class="text-danger">*</a></strong></label>
-                                                <input class="form-control" type="text" th:field="*{lastName}" id="lastname" placeholder="last name" required>
-                                                <div class="invalid-feedback">
-                                                    Please entered your last name.
-                                                </div>
+                                                <input class="form-control" type="text" id="lastname" name="lastname" placeholder="last name" required>
+                                                <span class="text-danger" style="font-size: 80%" id="lastnameSpan" name="lastnameSpan"></span>
                                             </div>
                                             <div class="form-group">
                                                 <label class="d-flex justify-content-center" for="age"><strong>Age</strong></label>
-                                                <input class="form-control" type="number" th:field="*{age}" id="age" placeholder="age" min="0" max="150">
-                                                <div class="invalid-feedback">
-                                                    Incorrect age.
-                                                </div>
+                                                <input class="form-control" type="number" id="age" name="age" value="" placeholder="age" min="0" max="150">
+                                                <span class="text-danger" style="font-size: 80%" id="ageSpan" name="ageSpan"></span>
                                             </div>
                                             <div class="form-group">
                                                 <label class="d-flex justify-content-center" for="email"><strong>E-mail<a class="text-danger">*</a></strong></label>
-                                                <input class="form-control" type="email" th:field="*{username}" id="email" name="email" placeholder="email" onchange="responseEmail()" required>
-                                                <div class="invalid-feedback">
-                                                    Incorrectemail.
-                                                </div>
-                                                <span class="text-danger" style="font-size: 80%" id="responseEmailSpan"></span>
+                                                <input class="form-control" type="email" id="email" name="email" placeholder="email" required>
+                                                <span class="text-danger" style="font-size: 80%" id="responseEmailSpan" name="responseEmailSpan"></span>
                                             </div>
                                             <div class="form-group">
                                                 <label class="d-flex justify-content-center" for="password"><strong>Password<a class="text-danger">*</a></strong></label>
-                                                <input class="form-control" type="password" th:field="*{password}" id="password" placeholder="password" pattern="[A-Za-zА-Яа-я0-9]{3,16}" required>
-                                                <div class="invalid-feedback">
-                                                    Password must be between 3 and 16 characters.
-                                                </div>
+                                                <input class="form-control" type="password" id="password" name="password" placeholder="password" required>
+                                                <span class="text-danger" style="font-size: 80%" id="passwordSpan" name="passwordSpan"></span>
                                             </div>
                                             <div class="form-group">
                                                 <label class="d-flex justify-content-center" for="rolesAdd"><strong>Role</strong></label>
-                                                <input type="hidden" id="roleListAdd" name="roleListAdd" />
-                                                <select class="custom-select" size="2" id="rolesAdd" name="rolesAdd" multiple="multiple">
+                                                <input type="hidden" id="roleListAdd" name="roleList" />
+                                                <select class="custom-select" size="2" id="rolesAdd" name="roles" multiple="multiple" onchange="selectSave('#formNewUser')">
                                                     <option selected id="selectUserAdd" value="1">User</option>
                                                     <option id="selectAdminAdd" value="2">Admin</option>
                                                 </select>
                                             </div>
                                             <div class="form-group d-flex justify-content-center">
-                                                <button class="btn btn-success" id="newUserBtn" type="submit">Add new user</button>
+                                                <button class="btn btn-success sBtn" id="newUserBtn" type="button" onclick="saveUser('#formNewUser')">Add new user</button>
                                             </div>
                                         </div>
 
@@ -214,8 +188,8 @@
 
 <!-- Modal edit -->
 <div class="modal fade" id="modalEdit" tabindex="-1" role="dialog" aria-labelledby="modalLabelEdit" aria-hidden="true">
-    <form class="needs-validation" novalidate th:method="POST" th:action="@{/edit}" th:object="${user}" id="editForm" name="editForm">
-        <input name="editReleEmail" type="hidden">
+    <form id="editForm" name="editForm" onchange="validateForm('#editForm')">
+        <input name="releEmail" type="hidden">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -228,50 +202,39 @@
             <div class="modal-body">
 
                         <div class="form-group">
-                            <label class="d-flex justify-content-center" for="iduserEdit"><strong>ID</strong></label>
-                            <input class="form-control w-50 mx-auto" type="text" th:field="*{id}" id="iduserEdit" placeholder="" readonly>
+                            <label class="d-flex justify-content-center" for="idUserEdit"><strong>ID</strong></label>
+                            <input class="form-control w-50 mx-auto" type="text" id="idUserEdit" name="idUser" placeholder="" readonly>
                         </div>
                         <div class="form-group">
                             <label class="d-flex justify-content-center" for="firstnameEdit"><strong>First name</strong></label>
-                            <input class="form-control w-50 mx-auto" type="text" th:field="*{firstName}" id="firstnameEdit" placeholder="" required>
-                            <div class="invalid-feedback">
-                                <a class="d-flex justify-content-center">Please entered your first name.</a>
-                            </div>
+                            <input class="form-control w-50 mx-auto" type="text" id="firstnameEdit" name="firstname" placeholder="" required>
+                            <span class="d-flex justify-content-center text-danger" style="font-size: 80%" id="firstnameSpanEdit" name="firstnameSpan"></span>
                         </div>
                         <div class="form-group">
                             <label class="d-flex justify-content-center" for="lastnameEdit"><strong>Last name</strong></label>
-                            <input class="form-control w-50 mx-auto" type="text" th:field="*{lastName}" id="lastnameEdit" placeholder="" required>
-                            <div class="invalid-feedback">
-                                <a class="d-flex justify-content-center">Please entered your last name.</a>
-                            </div>
+                            <input class="form-control w-50 mx-auto" type="text" id="lastnameEdit" name="lastname" placeholder="" required>
+                            <span class="d-flex justify-content-center text-danger" style="font-size: 80%" id="lastnameSpanEdit" name="lastnameSpan"></span>
                         </div>
                         <div class="form-group">
                             <label class="d-flex justify-content-center" for="ageEdit"><strong>Age</strong></label>
-                            <input class="form-control w-50 mx-auto" type="number" th:field="*{age}" id="ageEdit" placeholder="" min="0" max="150">
-                            <div class="invalid-feedback">
-                                <a class="d-flex justify-content-center">Incorrect age.</a>
-                            </div>
+                            <input class="form-control w-50 mx-auto" type="number" id="ageEdit" name="age" placeholder="" min="0" max="150">
+                            <span class="d-flex justify-content-center text-danger" style="font-size: 80%" id="ageSpanEdit" name="ageSpan"></span>
                         </div>
                         <div class="form-group">
                             <label class="d-flex justify-content-center" for="emailEdit"><strong>E-mail</strong></label>
-                            <input class="form-control w-50 mx-auto" type="email" th:field="*{username}" id="emailEdit" name="emailEdit" onchange="responseEditEmail()" placeholder="" required>
-                            <div class="invalid-feedback">
-                                <a class="d-flex justify-content-center">Incorrect email.</a>
-                            </div>
-                            <span class="d-flex justify-content-center text-danger" style="font-size: 80%" id="responseEmailEditSpan"></span>
+                            <input class="form-control w-50 mx-auto" type="email" id="emailEdit" name="email" placeholder="" required>
+                            <span class="d-flex justify-content-center text-danger" style="font-size: 80%" id="responseEmailEditSpan" name="responseEmailSpan"></span>
                         </div>
                         <div class="form-group">
                             <label class="d-flex justify-content-center" for="passwordEdit"><strong>Password</strong></label>
-                            <input class="form-control w-50 mx-auto" type="password" th:field="*{password}" id="passwordEdit" placeholder="" pattern="[A-Za-zА-Яа-я0-9]{3,16}" required>
-                            <div class="invalid-feedback">
-                                <a class="d-flex justify-content-center">Password must be between 3 and 16 characters.</a>
-                            </div>
+                            <input class="form-control w-50 mx-auto" type="password" id="passwordEdit" name="password" placeholder="" required>
+                            <span class="d-flex justify-content-center text-danger" style="font-size: 80%" id="passwordSpanEdit" name="passwordSpan"></span>
                         </div>
                         <div class="form-group">
                             <label class="d-flex justify-content-center" for="rolesEdit"><strong>Role</strong></label>
                             <div class="d-flex justify-content-center">
-                                <input type="hidden" id="roleListEdit" name="roleListEdit" />
-                                <select class="custom-select w-50 mx-auto" size="2" id="rolesEdit" name="rolesEdit" multiple="multiple">
+                                <input type="hidden" id="roleListEdit" name="roleList" />
+                                <select class="custom-select w-50 mx-auto" size="2" id="rolesEdit" name="roles" onchange="selectSave('#modalEdit')" multiple="multiple">
                                     <option id="selectUserEdit" value="1">User</option>
                                     <option id="selectAdminEdit" value="2">Admin</option>
                                 </select>
@@ -282,7 +245,7 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <input type="submit" id="editUserBtn" class="btn btn-primary" value="Edit">
+                <input type="button" id="editUserBtn" class="btn btn-primary sBtn" value="Edit" onclick="saveUser('#modalEdit')">
             </div>
         </div>
     </div>
@@ -291,7 +254,7 @@
 
 <!-- Modal delete -->
 <div class="modal fade" id="modalDelete" tabindex="-1" role="dialog" aria-labelledby="modalLabelDelete" aria-hidden="true">
-    <form id="deleteForm" th:method="POST" th:action="@{/delete}" th:object="${user}">
+    <form id="deleteForm">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -305,30 +268,30 @@
 
                     <div class="d-flex flex-column">
                         <div class="form-group">
-                            <label class="d-flex justify-content-center" for="iduserDelete"><strong>ID</strong></label>
-                            <input class="form-control w-50 mx-auto" type="text" th:field="*{id}" id="iduserDelete" placeholder="" readonly>
+                            <label class="d-flex justify-content-center" for="idUserDelete"><strong>ID</strong></label>
+                            <input class="form-control w-50 mx-auto" type="text" id="idUserDelete" name="idUser" placeholder="" readonly>
                         </div>
                         <div class="form-group">
                             <label class="d-flex justify-content-center" for="firstnameDelete"><strong>First name</strong></label>
-                            <input class="form-control w-50 mx-auto" type="text" th:field="*{firstName}" id="firstnameDelete" placeholder="" disabled>
+                            <input class="form-control w-50 mx-auto" type="text" id="firstnameDelete" name="firstname" placeholder="" disabled>
                         </div>
                         <div class="form-group">
                             <label class="d-flex justify-content-center" for="lastnameDelete"><strong>Last name</strong></label>
-                            <input class="form-control w-50 mx-auto" type="text" th:field="*{lastName}" id="lastnameDelete" placeholder="" disabled>
+                            <input class="form-control w-50 mx-auto" type="text" id="lastnameDelete" name="lastname" placeholder="" disabled>
                         </div>
                         <div class="form-group">
                             <label class="d-flex justify-content-center" for="ageDelete"><strong>Age</strong></label>
-                            <input class="form-control w-50 mx-auto" type="text" th:field="*{age}" id="ageDelete" placeholder="" disabled>
+                            <input class="form-control w-50 mx-auto" type="text" id="ageDelete" name="age" placeholder="" disabled>
                         </div>
                         <div class="form-group">
                             <label class="d-flex justify-content-center" for="emailDelete"><strong>E-mail</strong></label>
-                            <input class="form-control w-50 mx-auto" type="email" th:field="*{username}" id="emailDelete" placeholder="" disabled>
+                            <input class="form-control w-50 mx-auto" type="email" id="emailDelete" name="email" placeholder="" disabled>
                         </div>
                         <div class="form-group">
                             <label class="d-flex justify-content-center" for="rolesDelete"><strong>Role</strong></label>
                             <div class="d-flex justify-content-center">
-                                <input type="hidden" id="roleListDelete" name="roleListEdit">
-                                <select class="custom-select w-50 mx-auto" size="2" id="rolesDelete" name="rolesDelete" multiple disabled>
+                                <input type="hidden" id="roleListDelete" name="roleList">
+                                <select class="custom-select w-50 mx-auto" size="2" id="rolesDelete" name="roles" multiple disabled>
                                     <option id="selectUserDelete" value="1">User</option>
                                     <option id="selectAdminDelete" value="2">Admin</option>
                                 </select>
@@ -339,7 +302,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <input type="submit" class="btn btn-danger" value="Delete">
+                <input type="button" class="btn btn-danger" onclick="deleteUser()" value="Delete">
             </div>
         </div>
     </div>
